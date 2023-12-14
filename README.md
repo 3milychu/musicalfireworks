@@ -1,7 +1,6 @@
 # musicalfireworks
- 
 
-## documentation
+Musical light particles visualization to an audio file
 
 ### Uses the p5.js library
 - Reference: https://p5js.org/
