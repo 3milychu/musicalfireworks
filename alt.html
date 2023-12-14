@@ -1,4 +1,33 @@
-<!DOCTYPE html>
+<!-- Copyright 2022 Emily Chu.
+All rights reserved.
+
+Redistribution and use in source and binary forms, with or without
+modification, are permitted provided that the following conditions are met:
+
+    * Redistributions of source code must retain the above copyright
+      notice, this list of conditions and the following disclaimer.
+
+    * Redistributions in binary form must reproduce the above copyright
+      notice, this list of conditions and the following disclaimer in the
+      documentation and/or other materials provided with the distribution.
+
+    * Neither the name of the Yahoo! Inc. nor the
+      names of its contributors may be used to endorse or promote products
+      derived from this software without specific prior written permission.
+
+THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS" AND
+ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE
+DISCLAIMED. IN NO EVENT SHALL YAHOO! INC. BE LIABLE FOR ANY
+DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES
+(INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES;
+LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND
+ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+(INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS
+SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+ -->
+
+ <!DOCTYPE html>
 <html>
 <head>
   <meta charset="utf-8">
@@ -39,10 +68,9 @@ var trail = [];
 var particles = [];
 
 function preload() {
-    // soundFile = loadSound(['files/soundscape1_clip.mp3']);
-    // soundFile = loadSound(['files/oi1.mp3']);
+// change - update audio file here
     soundFile = loadSound(['files/lastlast.mp3']);
-      theShader = new p5.Shader(this.renderer, vertShader, fragShader);
+    theShader = new p5.Shader(this.renderer, vertShader, fragShader);
 }
 
 function setup() {
@@ -63,15 +91,20 @@ function setup() {
 
 function draw() {
 
+// breaks down audio characteristics
   fft.analyze();
   bass = (int)(fft.getEnergy("bass"));
   lmid = (int)(fft.getEnergy("lowMid"));
   mid = (int)(fft.getEnergy("mid"));
   hmid = (int)(fft.getEnergy("highMid"));
   treble = (int)(fft.getEnergy("treble"));
+
+// smooths noise
   smooth(treble)
   smooth(mid)
   smooth(bass)
+
+// change - update last 3 values with mapping to the range you want at what interval steps 
   treble= map(treble, 0, 300, 1, 30, 0.5);
   bass = map(bass, 0, 300, -900,900, 1);
   bass2 = map(bass, 0, 300, -20,20, 1);
@@ -80,17 +113,16 @@ function draw() {
 
   background(0);
   noStroke();
-  //circleSizeX = map(noise(frameCount*0.003), 0, 1, 300, -200);
-  //circleSizeX = map(noise(frameCount*0.005), 0, 1, 500, -500);
+
+// change - can play with changing the width and height of particles based on audio characteristics from section starting on line 94
   circleSizeX = (map(sin(frameCount*0.04), -1, 1, -200, 200))- (map(sin(bass*0.04), -1, 1, -100, 500));
   circleSizeY = (map(sin(treble*0.04), -1, 1, -100, 500));
-  // circleSizeY = bass;
-  //circleSizeX = map(cos(frameCount*0.01), -1, 1, 300, -150);
-  //circleSizeY = random(0, 300);
+
   noiseSpeed = 0.006;
   
   countPosition = counter/4;
-  
+
+// change - can update speed with other audio characteristics from section starting on line 94
   speed = bass;
   
   var posX = width / 2 + sin(countPosition * speed) * circleSizeX;
@@ -229,6 +261,7 @@ function Particle(x, y, vx, vy) {
   this.pos = new p5.Vector(x, y);
   this.vel = new p5.Vector(vx, vy);
   this.vel.mult(random(5));
+// change - can update velocity and mass with other audio characteristics from section starting from line 94
   this.vel.rotate(radians(bass2));
   this.mass = bass3;
   this.airDrag = 0.98;
@@ -273,6 +306,7 @@ let fragShader = `
         if (i < trailCount) {
           vec2 trailPos = trail[i];
           float value = float(i) / distance(st, trailPos.xy) * 0.00015;  // Multiplier may need to be adjusted if max trail count is tweaked.
+          // change - play with r g b values to change hue
           r += value * 0.1;
           g += value * 0.01;
           b += value *0.4;
