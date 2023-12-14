@@ -3,6 +3,7 @@
 Musical light particles visualization to an audio file
 - LA Nights / Yasuko Agawa: https://3milychu.github.io/musicalfireworks
 - Last Last / Burna Boy: https://3milychu.github.io/musicalfireworks/alt
+- Sunday Scaries / Slythemusic (my sister): https://3milychu.github.io/musicalfireworks/slythe1
 
 
 ### Uses the p5.js library
